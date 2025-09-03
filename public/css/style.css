@@ -1,0 +1,106 @@
+/* Custom styles for REST Catalog UI */
+
+.sidebar {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    padding-top: 20px;
+}
+
+.nav-link {
+    color: #495057;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: #007bff;
+    background-color: #e9ecef;
+}
+
+.content-section {
+    min-height: 400px;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.table-item, .namespace-item, .view-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.item-name {
+    font-weight: 500;
+    flex-grow: 1;
+}
+
+.item-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.alert {
+    margin-bottom: 20px;
+}
+
+.form-text {
+    font-size: 0.875em;
+    color: #6c757d;
+}
+
+pre {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 0.875em;
+}
+
+.loading {
+    text-align: center;
+    color: #6c757d;
+    padding: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #6c757d;
+    padding: 40px 20px;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+@media (max-width: 767.98px) {
+    .sidebar {
+        height: auto;
+        position: relative;
+    }
+    
+    .item-actions {
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    .btn-sm {
+        font-size: 0.75rem;
+        padding: 0.125rem 0.25rem;
+    }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "rest-catalog-server",
+  "version": "1.0.0",
+  "description": "Express.js implementation of Apache Iceberg REST Catalog API",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "morgan": "^1.10.0",
+    "sequelize": "^6.32.1",
+    "sqlite3": "^5.1.6",
+    "pg": "^8.11.1",
+    "uuid": "^9.0.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": [
+    "iceberg",
+    "rest",
+    "catalog",
+    "api",
+    "express"
+  ],
+  "author": "",
+  "license": "Apache-2.0"
+}
