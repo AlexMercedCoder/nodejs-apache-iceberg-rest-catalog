@@ -1,5 +1,6 @@
 const { Table, Namespace } = require('../models');
 const { v4: uuidv4 } = require('uuid');
+const s3Service = require('../config/s3');
 
 const parseNamespace = (namespaceStr) => {
   return namespaceStr.split('%1F');
@@ -90,7 +91,8 @@ const createTable = async (req, res) => {
     }
     
     const tableUuid = uuidv4();
-    const tableLocation = location || `${namespaceName}/${name}`;
+    const warehousePath = process.env.WAREHOUSE_PATH || '/tmp/warehouse';
+    const tableLocation = location || s3Service.getTableWarehousePath(warehousePath, namespaceLevels, name);
     
     const defaultPartitionSpec = {
       'spec-id': 0,
@@ -361,6 +363,65 @@ const reportTableMetrics = async (req, res) => {
   }
 };
 
+const getTableCredentials = async (req, res) => {
+  try {
+    const namespaceLevels = parseNamespace(req.params.namespace);
+    const namespaceName = formatNamespace(namespaceLevels);
+    const tableName = req.params.table;
+    
+    const namespace = await Namespace.findOne({ where: { name: namespaceName } });
+    if (!namespace) {
+      return res.status(404).json({
+        message: `Namespace ${namespaceName} does not exist`,
+        type: 'NoSuchNamespaceException',
+        code: 404
+      });
+    }
+    
+    const table = await Table.findOne({ 
+      where: { name: tableName, namespaceId: namespace.id } 
+    });
+    if (!table) {
+      return res.status(404).json({
+        message: `Table ${tableName} does not exist in namespace ${namespaceName}`,
+        type: 'NoSuchTableException',
+        code: 404
+      });
+    }
+    
+    // Check if table uses S3 storage
+    if (!s3Service.isS3Warehouse(table.location)) {
+      return res.status(400).json({
+        message: 'Table does not use S3 storage',
+        type: 'BadRequestException',
+        code: 400
+      });
+    }
+    
+    // Return S3 credentials for client to access table data
+    const credentials = {
+      'aws.region': process.env.AWS_REGION || 'us-east-1',
+      'aws.access-key-id': process.env.AWS_ACCESS_KEY_ID,
+      'aws.secret-access-key': process.env.AWS_SECRET_ACCESS_KEY
+    };
+    
+    // Add endpoint if using S3-compatible service
+    if (process.env.S3_ENDPOINT) {
+      credentials['s3.endpoint'] = process.env.S3_ENDPOINT;
+      credentials['s3.path-style-access'] = 'true';
+    }
+    
+    res.json(credentials);
+  } catch (error) {
+    console.error('Error in getTableCredentials:', error);
+    res.status(500).json({
+      message: 'Internal server error',
+      type: 'InternalServerException',
+      code: 500
+    });
+  }
+};
+
 module.exports = {
   listTables,
   createTable,
@@ -368,5 +429,6 @@ module.exports = {
   updateTable,
   deleteTable,
   renameTable,
-  reportTableMetrics
+  reportTableMetrics,
+  getTableCredentials
 };

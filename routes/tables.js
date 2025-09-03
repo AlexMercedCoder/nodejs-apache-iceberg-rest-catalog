@@ -7,7 +7,8 @@ const {
   updateTable,
   deleteTable,
   renameTable,
-  reportTableMetrics
+  reportTableMetrics,
+  getTableCredentials
 } = require('../controllers/tableController');
 
 router.get('/:prefix/namespaces/:namespace/tables', listTables);
@@ -17,5 +18,6 @@ router.post('/:prefix/namespaces/:namespace/tables/:table', updateTable);
 router.delete('/:prefix/namespaces/:namespace/tables/:table', deleteTable);
 router.post('/:prefix/tables/rename', renameTable);
 router.post('/:prefix/namespaces/:namespace/tables/:table/metrics', reportTableMetrics);
+router.post('/:prefix/namespaces/:namespace/tables/:table/credentials', getTableCredentials);
 
 module.exports = router;

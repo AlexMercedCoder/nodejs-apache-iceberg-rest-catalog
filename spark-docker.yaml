@@ -1,0 +1,18 @@
+services:
+  spark:
+    platform: linux/x86_64
+    image: alexmerced/spark35nb:latest
+    ports: 
+      - "8080:8080"  # Master Web UI
+      - "7077:7077"  # Master Port
+      - "8888:8888"  # Jupyter Notebook
+    environment:
+      - AWS_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+    container_name: spark
+    networks:
+      polaris-quickstart:
+
+networks:
+  polaris-quickstart:
